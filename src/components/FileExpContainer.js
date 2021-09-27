@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react'
 import React, { useEffect, useState } from 'react'
 
 import { Col, Container, Row } from "reactstrap"
@@ -7,7 +6,6 @@ import File from './File'
 
 
 const FileExpContainer = () => {
-
     const [data, setData] = useState()
 
     //data loading
@@ -19,70 +17,33 @@ const FileExpContainer = () => {
         }).catch(error => console.log(error))
     }, [])
 
-
-    /**
-     * {
-     * 
-     * childrne: [
-        * {
-        *  name: "file1",
-        *  type: file
-        * },
-        * {
-        *  name: "fodler",
-        *  type: folder,
-        *  chidlren: [
-        *   
-        *  ]
-        * },
-     * ]
-     * 
-     * }
-     * {
-     *  
-     * }
-     * 
-     * 
-     * 
-     * } data 
-     * @returns 
-     */
-
-    // []
-    // []
-
-    const renderStructure = (data) => {
-        console.log('data', data);
-        if (data && data.children) {
-            // folder
-            for (let i = 0; i < data.children.length; i++) {
-                renderStructure(data.children[i])
-            }
-            
-        } else {
-            console.log("rendering component");
-            console.log("rendering component data", data);
-            return <File id={data.id}
-                name={data.name}
-                type={data.type} />
-        }
+    // deletes a folder or file
+    const onDelete = (id) => {
+        api.deleteById(id).then(response => {
+            setData(response)
+        }).catch(error => console.log(error))
     }
 
-    // console.log(data, "data");
+    //render if data loads
     return hasLoaded && (
-        <Container>
+        <Container className="px-3">
             <Row>
                 <Col xs="4" className="borderColor px-0 containerBg">
-                    <h6 className="text-uppercase my-auto bg-secondary p-1 px-2">
+                    <h6 className="text-uppercase my-auto bg-secondary p-1 px-4">
                         {data.name}
                     </h6>
                 </Col>
             </Row>
-            <Row>
-                <Col xs="4" className="borderColor containerBg border-top-0">
-                    {
-                        renderStructure(data)
-                    }
+            <Row >
+                <Col xs="4" className="borderColor containerBg border-top-0 pb-2">
+                    {data.children.map((content, id) => {
+                        return <File key={content.id}
+                            name={content.name}
+                            type={content.type}
+                            childNodes={content.children}
+                            id={content.id}
+                            onDelete={onDelete} />
+                    })}
                 </Col>
             </Row>
         </Container>

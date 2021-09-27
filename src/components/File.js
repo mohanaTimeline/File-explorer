@@ -1,42 +1,54 @@
-import React, {useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import ArrowRight from '../assets/icons/arrowRight';
 import ArrowDown from '../assets/icons/arrowDown';
-import { fileTypes } from "./constants";
+import DefaultFile from '../assets/icons/defaultFile'
+import DeleteFile from '../assets/icons/x'
+import { fileTypeIcons } from "./constants";
+import { Container } from "reactstrap";
 
-const File = ({ name, type, id }) => {
-    console.log(name, id, type)
+const File = ({ name, type, id, childNodes, onDelete }) => {
     const [showExpandIcon, setShowExpandIcon] = useState(false);
     const [expanded, setExpanded] = useState(false)
-    
-    // console.log(children, "children");
 
-    console.log('File component')
-
+    // display folder icon
     useEffect(() => {
         if (type === "folder") {
             setShowExpandIcon(true);
         }
     }, [type])
- 
+
+    // toggle folder icons(collapsed/expanded)
     const toggle = (event) => {
-        console.log(event.target)
-        return setExpanded(!expanded)
+        event.stopPropagation();
+        setExpanded(!expanded)
+    }
+
+    //callback of onDelete
+    const deleteContent = (event) => {
+        event.stopPropagation();
+        onDelete(id)
     }
 
     return (
-        <div key={id} onClick={toggle}>
+        <div className="px-3" key={id} onClick={toggle}>
             {showExpandIcon ? <span> {expanded ? <ArrowDown /> : <ArrowRight />} </span> : null}
-            <span>{name}</span>
-            {/* <span>{type === 'file' && React.createElement(fileTypes[name])} {name}</span>  */}
+            <span>{type === 'file' && (fileTypeIcons[name] ? React.createElement(fileTypeIcons[name]) : <DefaultFile />)} {name}
+                <span className="float-end" id={id} onClick={deleteContent}><DeleteFile /></span>
+            </span>
+            {expanded && childNodes && childNodes.length
+                ? childNodes.map((data) => (
+                    <File
+                        name={data.name}
+                        type={data.type}
+                        id={data.id}
+                        key={data.id}
+                        childNodes={data.children}
+                        onDelete={onDelete}
+                    />
+                ))
+                : null}
         </div>
     )
-    // console.log(name, type);
-    // return (
-    //     <div key={key} onClick={toggle}>
-    //         {showExpandIcon ? <span> {expanded ? <ArrowDown /> : <ArrowRight />} </span> : null}
-    //         <span>{type === 'file' && React.createElement(fileTypes[name])} {name}</span> 
-    //     </div>
-    // )
 }
 
 export default File
