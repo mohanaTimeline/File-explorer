@@ -12,10 +12,21 @@ body,
 
 // file explorer background
 .containerBg {
-  background: #28282B;
+  background: #28282b;
 }
 
 // file explorer borders
 .borderColor {
   border: 0.7px solid #5f6a6a;
+}
+
+span:hover {
+  color: white;
+}
+
+.iconContainer .showOnHover {
+  display: none;
+}
+.iconContainer:hover .showOnHover {
+  display: block;
 }
