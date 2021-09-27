@@ -30,7 +30,7 @@ const File = ({ name, type, id, childNodes, onDelete }) => {
     }
 
     return (
-        <div className="px-2 iconContainer" key={id} onClick={toggle}>
+        <Container className="px-2 iconContainer" key={id} onClick={toggle}>
             {showExpandIcon ? <span> {expanded ? <ArrowDown /> : <ArrowRight />} </span> : null}
             <span className="">{type === 'file' && (fileTypeIcons[name] ? React.createElement(fileTypeIcons[name]) : <DefaultFile />)} {name}
                 <span className="showOnHover float-end" id={id} onClick={deleteContent}><DeleteFile /></span>
@@ -47,7 +47,7 @@ const File = ({ name, type, id, childNodes, onDelete }) => {
                     />
                 ))
                 : null}
-        </div>
+        </Container>
     )
 }
 
